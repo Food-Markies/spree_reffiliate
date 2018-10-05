@@ -11,7 +11,7 @@ SpreeReffiliate.prototype.bindEvents = function() {
   })
 }
 
-$(function(){
+$(document).on('turbolinks:load', function(){
   var spreeReffiliate = new SpreeReffiliate("[data-coupon-code]", "[data-copy-coupon-code]")
   spreeReffiliate.bindEvents()
 })
