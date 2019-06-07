@@ -1,4 +1,4 @@
-<% unless @user.associated_partner.present? %>
+<% unless (@user.associated_partner.present? || @user.lead?)%>
   <br>
   <dt>Refer a Friend Link</dt>
   <dd>
