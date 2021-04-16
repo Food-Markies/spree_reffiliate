@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_reffiliate'
-  s.version     = '3.2.0'
+  s.version     = '3.3.0'
   s.author      = 'Michael Davidson'
   s.email       = 'mdavo6@gmail.com'
   s.summary     = 'Spree Affiliate and Referrals extension'
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files   = s.files.grep(%r{^spec/})
   s.require_path = 'lib'
 
-  s.add_dependency 'spree_core', '~> 3.2.0'
+  s.add_dependency 'spree_core', '~> 3.3.0'
 
   s.add_development_dependency 'capybara', '~> 2.5'
   s.add_development_dependency 'coffee-rails', '~> 4.0.0'
