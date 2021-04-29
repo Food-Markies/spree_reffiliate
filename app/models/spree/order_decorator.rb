@@ -1,7 +1,11 @@
-Spree::Order.class_eval do
+module Spree
+  module OrderDecorator
   include Spree::TransactionRegistrable
 
-  has_many :transactions, as: :commissionable, class_name: 'Spree::CommissionTransaction', dependent: :restrict_with_error
+  def self.prepended(base)
+    base.has_many :transactions, as: :commissionable, class_name: 'Spree::CommissionTransaction', dependent: :restrict_with_error
+  end
+
   belongs_to :affiliate, class_name: 'Spree::Affiliate'
   belongs_to :referral, class_name: 'Spree::Referral'
 
@@ -67,4 +71,7 @@ Spree::Order.class_eval do
       return true unless Spree::Order.exists?(email: email, state: 'complete')
     end
 
+  end
 end
+
+::Spree::Order.prepend(Spree::OrderDecorator)
