@@ -1,14 +1,16 @@
-Spree::UsersController.class_eval do
+module Spree
+  module UsersControllerDecorator
 
-  prepend_before_action :affiliate_user, only: :update
-  before_action :load_referred_users, only: :referral_details
-  before_action :load_referred_orders, only: :referral_details
-  before_action :update_store_credit_currency, only: [:show, :referral_details]
+    prepend_before_action :affiliate_user, only: :update
+    before_action :load_referred_users, only: :referral_details
+    before_action :load_referred_orders, only: :referral_details
+    before_action :update_store_credit_currency, only: [:show, :referral_details]
 
-  def referral_details
-  end
+    def referral_details
+    end
 
-  private
+    private
+
     def load_object
       if @affiliate
         @user ||= @affiliate_user
@@ -41,4 +43,7 @@ Spree::UsersController.class_eval do
                             page(params[:page]).per(params[:per_page] || Spree::Config[:referred_records_per_page])
     end
 
+  end
 end
+
+::Spree::UsersController.prepend(Spree::UsersControllerDecorator)

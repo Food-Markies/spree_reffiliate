@@ -1,8 +1,10 @@
-Spree::CheckoutController.class_eval do
-  #before_action :set_affilate_or_referral, only: :update
-  after_action :clear_session, only: :update
+module Spree
+  module CheckoutControllerDecorator
+    #before_action :set_affilate_or_referral, only: :update
+    after_action :clear_session, only: :update
 
-  private
+    private
+
     def set_affilate_or_referral
       if @order.email.present?
         if cookies[:affiliate]
@@ -17,4 +19,7 @@ Spree::CheckoutController.class_eval do
       cookies.delete :affiliate if @order.completed?
       cookies.delete :referral if @order.completed?
     end
+  end
 end
+
+::Spree::CheckoutController.prepend(Spree::CheckoutControllerDecorator)
