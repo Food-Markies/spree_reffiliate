@@ -1,10 +1,12 @@
 module Spree
   module UsersControllerDecorator
 
-    prepend_before_action :affiliate_user, only: :update
-    before_action :load_referred_users, only: :referral_details
-    before_action :load_referred_orders, only: :referral_details
-    before_action :update_store_credit_currency, only: [:show, :referral_details]
+    def self.prepended(base)
+      base.prepend_before_action :affiliate_user, only: :update
+      base.before_action :load_referred_users, only: :referral_details
+      base.before_action :load_referred_orders, only: :referral_details
+      base.before_action :update_store_credit_currency, only: [:show, :referral_details]
+    end
 
     def referral_details
     end
