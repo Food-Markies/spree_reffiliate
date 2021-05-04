@@ -1,5 +1,5 @@
 module Spree
-  module Order
+  class Order < Spree::Base
     module StoreCreditDecorator
 
       def display_total_available_store_credit(currency)
@@ -10,4 +10,4 @@ module Spree
   end
 end
 
-::Spree::Order::StoreCredit.prepend(Spree::Order::StoreCreditDecorator)
+::Spree::Order.prepend(Spree::Order::StoreCreditDecorator)
