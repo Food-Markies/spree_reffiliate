@@ -5,7 +5,7 @@ module Spree
       base.before_action :check_referral_and_affiliate, only: :create
       # Referral benefit changed to order placement not signup
       # after_action :reset_referral_session, only: :create
-      after_action :reset_affiliate_cookie, only: :create
+      base.after_action :reset_affiliate_cookie, only: :create
     end
 
     private
