@@ -29,4 +29,4 @@ module Spree
   end
 end
 
-::Spree::UserRegistrationsController.prepend(Spree::UsersRegistrationsControllerDecorator)
+::Spree::UserRegistrationsController.prepend(Spree::UserRegistrationsControllerDecorator)
