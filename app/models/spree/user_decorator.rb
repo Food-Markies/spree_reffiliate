@@ -9,16 +9,16 @@ module Spree
       base.has_one :affiliate, through: :referred_record, foreign_key: :affiliate_id
       base.has_one :affiliate_record, class_name: 'Spree::ReferredRecord'
       base.has_many :transactions, as: :commissionable, class_name: 'Spree::CommissionTransaction', dependent: :restrict_with_error
+
+      base.after_create :create_referral
+
+      # Add referral benefit based on order instead of user signup to ensure referrer receives benefit if user checks out as guest
+      # after_create :process_referral
+      base.after_create :process_affiliate
+      base.after_update :activate_associated_partner, if: :associated_partner_activable?
+
+      base.validates :referral_credits, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
     end
-
-    after_create :create_referral
-
-    # Add referral benefit based on order instead of user signup to ensure referrer receives benefit if user checks out as guest
-    # after_create :process_referral
-    after_create :process_affiliate
-    after_update :activate_associated_partner, if: :associated_partner_activable?
-
-    validates :referral_credits, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
     def referred_by
       referred_record.try(:referral).try(:user)

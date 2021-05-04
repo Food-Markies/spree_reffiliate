@@ -4,9 +4,8 @@ module Spree
 
     def self.prepended(base)
       base.has_one :referred_record
+      base.after_commit :send_credit_reward_information, on: :create, if: :referral?
     end
-
-    after_commit :send_credit_reward_information, on: :create, if: :referral?
 
     def display_amount
       Spree::Money.new(amount, currency: currency)

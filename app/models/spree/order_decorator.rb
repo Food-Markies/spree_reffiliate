@@ -4,13 +4,11 @@ module Spree
 
   def self.prepended(base)
     base.has_many :transactions, as: :commissionable, class_name: 'Spree::CommissionTransaction', dependent: :restrict_with_error
+    base.belongs_to :affiliate, class_name: 'Spree::Affiliate'
+    base.belongs_to :referral, class_name: 'Spree::Referral'
+    base.state_machine.after_transition to: :complete, do: :create_commission_transaction
+    base.state_machine.before_transition to: :complete, do: :create_referral_benefit
   end
-
-  belongs_to :affiliate, class_name: 'Spree::Affiliate'
-  belongs_to :referral, class_name: 'Spree::Referral'
-
-  state_machine.after_transition to: :complete, do: :create_commission_transaction
-  state_machine.before_transition to: :complete, do: :create_referral_benefit
 
   def referred?
     referral.present?
