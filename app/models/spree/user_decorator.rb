@@ -56,10 +56,6 @@ module Spree
       Spree::Money.new(total_available_store_credit, currency: currency)
     end
 
-    def total_available_store_credit
-      store_credits.reload.to_a.sum(&:amount_remaining)
-    end
-
     def convert_store_credit_currency(currency)
       if self.store_credits.any?
         self.store_credits.each do |store_credit|
