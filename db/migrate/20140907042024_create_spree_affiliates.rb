@@ -1,4 +1,4 @@
-class CreateSpreeAffiliates < ActiveRecord::Migration
+class CreateSpreeAffiliates < ActiveRecord::Migration[6.1]
   def change
     create_table :spree_affiliates do |t|
       t.string :name

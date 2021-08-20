@@ -2,10 +2,8 @@ module Spree
   class Order < Spree::Base
     module StoreCreditDecorator
 
-      def total_available_store_credit
-        return 0.0 unless user
-
-        user.total_available_store_credit(currency)
+      def display_total_available_store_credit(currency)
+        Spree::Money.new(total_available_store_credit, currency: currency)
       end
 
     end

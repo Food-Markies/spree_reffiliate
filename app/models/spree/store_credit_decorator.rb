@@ -26,7 +26,7 @@ module Spree
 
     private
       def referral?
-        category.try(:name) == "Referral Credit"
+        category.try(:name) == 'Referral Category'
       end
 
       def send_credit_reward_information

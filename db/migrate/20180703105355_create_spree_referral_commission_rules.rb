@@ -1,4 +1,4 @@
-class CreateSpreeReferralCommissionRules < ActiveRecord::Migration
+class CreateSpreeReferralCommissionRules < ActiveRecord::Migration[6.1]
   def change
     create_table :spree_referral_commission_rules do |t|
       t.references :commission_rule, index: true

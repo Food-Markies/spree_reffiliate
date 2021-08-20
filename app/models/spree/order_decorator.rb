@@ -57,7 +57,7 @@ module Spree
     end
 
     def referral_store_credit_category
-      @store_credit_category ||= Spree::StoreCreditCategory.find_or_create_by(name: Spree::StoreCredit::REFERRAL_STORE_CREDIT_CATEGORY)
+      @store_credit_category ||= Spree::StoreCreditCategory.find_or_create_by(name: 'Referral Category')
     end
 
     def referrer_eligible?(user)

@@ -6,6 +6,6 @@ module Spree
     belongs_to :affiliate
     belongs_to :store_credit
 
-    validates_presence_of :order
+    # validates_presence_of :order
   end
 end

@@ -25,7 +25,11 @@ module Spree
     end
 
     def referred_count
-      referral.referred_records.count
+      if referral != nil
+        referral.referred_records.count
+      else
+        0
+      end
     end
 
     def referred_orders_count
@@ -56,6 +60,10 @@ module Spree
       Spree::Money.new(total_available_store_credit, currency: currency)
     end
 
+    def total_available_store_credit
+      store_credits.reload.to_a.sum(&:amount_remaining)
+    end
+
     def convert_store_credit_currency(currency)
       if self.store_credits.any?
         self.store_credits.each do |store_credit|
@@ -72,59 +80,64 @@ module Spree
     end
 
     protected
-      def password_required?
-        if new_record? && spree_roles.include?(Spree::Role.affiliate)
-          false
-        else
-          super
-        end
+
+    def password_required?
+      if new_record? && spree_roles.include?(Spree::Role.find_or_create_by(name: 'affiliate'))
+        false
+      else
+        super
       end
+    end
 
     private
-      def process_referral
-        if referral_code.present?
-          referred = Spree::Referral.where('lower(code) = ?', referral_code.downcase).first
-          if referred
-            store_credit = create_store_credits(referred.user) if referrer_eligible?(referred.user)
-            referred.referred_records.create(user: self, store_credit_id: store_credit.try(:id))
-          end
+
+    def process_referral
+      if referral_code.present?
+        referred = Spree::Referral.where('lower(code) = ?', referral_code.downcase).first
+        if referred
+          store_credit = create_store_credits(referred.user) if referrer_eligible?(referred.user)
+          referred.referred_records.create(user: self, store_credit_id: store_credit.try(:id))
         end
       end
+    end
 
-      def process_affiliate
-        if affiliate_code.present?
-          affiliated = Spree::Affiliate.where('lower(path) = ?', affiliate_code.downcase).first
-          if affiliated
-            register_commission_transaction(affiliated)
-            affiliated.referred_records.create(user: self)
-          end
+    def process_affiliate
+      if affiliate_code.present?
+        affiliated = Spree::Affiliate.where('lower(path) = ?', affiliate_code.downcase).first
+        if affiliated
+          register_commission_transaction(affiliated)
+          # referred_record = Spree::ReferredRecord.new(
+          #   user: self,
+          #   affiliate: affiliated
+          # )
+          # referred_record.save!
+          affiliated.referred_records.create(user: self)
         end
       end
+    end
 
-      def activate_associated_partner
-        associated_partner.update_attributes(activation_token: nil, activated_at: Time.current, active: true)
-      end
+    def activate_associated_partner
+      associated_partner.update_attributes(activation_token: nil, activated_at: Time.current, active: true)
+    end
 
-      def associated_partner_activable?
-        can_activate_associated_partner && associated_partner? && !associated_partner.active?
-      end
+    def associated_partner_activable?
+      can_activate_associated_partner && associated_partner? && !associated_partner.active?
+    end
 
-      def create_store_credits(referrer)
-        referrer.store_credits.create(amount: referral_amount(referrer),
-                                      category_id: referral_store_credit_category.try(:id),
-                                      created_by: Spree::User.admin.try(:first),
-                                      currency: Spree::Config.currency)
-      end
+    def create_store_credits(referrer)
+      referrer.store_credits.create(amount: referral_amount(referrer),
+                                    category_id: referral_store_credit_category.try(:id),
+                                    created_by: Spree::User.admin.try(:first),
+                                    currency: Spree::Config.currency)
+    end
 
-      def referral_amount(referrer)
-        referrer.referral_credits || Spree::Config[:referral_credits]
-      end
+    def referral_amount(referrer)
+      referrer.referral_credits || Spree::Config[:referral_credits]
+    end
 
-
-
-      def referral_store_credit_category
-        @store_credit_category ||= Spree::StoreCreditCategory.find_or_create_by(name: Spree::StoreCredit::REFERRAL_STORE_CREDIT_CATEGORY)
-      end
+    def referral_store_credit_category
+      @store_credit_category ||= Spree::StoreCreditCategory.find_or_create_by(name: 'Referral Category')
+    end
   end
 end
 

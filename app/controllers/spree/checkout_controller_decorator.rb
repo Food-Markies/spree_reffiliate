@@ -2,7 +2,7 @@ module Spree
   module CheckoutControllerDecorator
 
     def self.prepended(base)
-      #before_action :set_affilate_or_referral, only: :update
+      base.before_action :set_affilate_or_referral, only: :update
       base.after_action :clear_session, only: :update
     end
 

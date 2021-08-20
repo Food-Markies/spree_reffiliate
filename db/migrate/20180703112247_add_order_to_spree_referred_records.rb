@@ -1,4 +1,4 @@
-class AddOrderToSpreeReferredRecords < ActiveRecord::Migration
+class AddOrderToSpreeReferredRecords < ActiveRecord::Migration[6.1]
   def change
     add_column :spree_referred_records, :order_id ,:integer
 

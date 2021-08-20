@@ -1,30 +1,30 @@
 <% if @user && @user.associated_partner.present? %>
   <h3 class="text-left"><%= Spree.t(:my_commissions) %></h3>
-  <% @commissions  = @user.associated_partner.commissions %>
+  <% @commissions = @user.associated_partner.commissions %>
   <% if @commissions.any? %>
     <table class="table" id="listing_affiliates" data-hook>
       <thead>
-        <tr data-hook="admin_affiliates_index_headers">
-          <th><%= Spree.t(:start_date) %></th>
-          <th><%= Spree.t(:end_date) %></th>
-          <th><%= Spree.t(:total_commission) %></th>
-          <th><%= Spree.t(:transactions) %></th>
-          <th><%= Spree.t(:commission_status) %></th>
-        </tr>
+      <tr data-hook="admin_affiliates_index_headers">
+        <th><%= Spree.t(:start_date) %></th>
+        <th><%= Spree.t(:end_date) %></th>
+        <th><%= Spree.t(:total_commission) %></th>
+        <th><%= Spree.t(:transactions) %></th>
+        <th><%= Spree.t(:commission_status) %></th>
+      </tr>
       </thead>
       <tbody>
-        <% @commissions.each do |commission|%>
-          <tr id="<%= spree_dom_id commission %>" data-hook="commissions_index_rows" class="<%= cycle('odd', 'even')%>">
-            <td><%= pretty_time(commission.start_date) %></td>
-            <td><%= pretty_time(commission.end_date) %></td>
-            <td class='align-center'><%= commission.display_total %></td>
-            <td><%= commission.transactions_count.to_i %></td>
-            <td class='align-center'>
-              <% status = commission.paid? ? 'Paid' : 'unpaid' %>
-              <span class="label label-primary"><%= status %></span>
-            </td>
-          </tr>
-        <% end %>
+      <% @commissions.each do |commission| %>
+        <tr id="<%= spree_dom_id commission %>" data-hook="commissions_index_rows" class="<%= cycle('odd', 'even') %>">
+          <td><%= pretty_time(commission.start_date) %></td>
+          <td><%= pretty_time(commission.end_date) %></td>
+          <td class='align-center'><%= commission.display_total %></td>
+          <td><%= commission.transactions_count.to_i %></td>
+          <td class='align-center'>
+            <% status = commission.paid? ? 'Paid' : 'unpaid' %>
+            <span class="label label-primary"><%= status %></span>
+          </td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   <% else %>
@@ -32,28 +32,28 @@
   <% end %>
 
   <h3 class="text-left"><%= Spree.t(:affiliate_orders) %></h3>
-  <% @commission_transactions  = @user.associated_partner.transactions %>
+  <% @commission_transactions = @user.associated_partner.transactions %>
   <% if @commission_transactions.any? %>
     <table class="table" id="listing_affiliates" data-hook>
       <thead>
-        <tr data-hook="admin_affiliates_index_headers">
-          <th><%= Spree.t(:reference) %></th>
-          <th>
-            <%= Spree.t(:date) %>
-          </th>
-          <th><%= Spree.t(:commission_amount) %></th>
-          <th><%= Spree.t(:locked) %></th>
-        </tr>
+      <tr data-hook="admin_affiliates_index_headers">
+        <th><%= Spree.t(:reference) %></th>
+        <th>
+          <%= Spree.t(:date) %>
+        </th>
+        <th><%= Spree.t(:commission_amount) %></th>
+        <th><%= Spree.t(:locked) %></th>
+      </tr>
       </thead>
       <tbody>
-        <% @commission_transactions.each do |transaction|%>
-          <tr id="<%= spree_dom_id transaction %>" data-hook="admin_transactions_index_rows" class="<%= cycle('odd', 'even')%>">
-            <td class='transaction_name'><%=link_to transaction.commissionable.number, '' %></td>
-            <td class='align-center'><%= pretty_time(transaction.created_at) %></td>
-            <td class='align-center'><%= transaction.display_total %></td>
-            <td class='align-center'> <%= transaction.locked? %> </td>
-          </tr>
-        <% end %>
+      <% @commission_transactions.each do |transaction| %>
+        <tr id="<%= spree_dom_id transaction %>" data-hook="admin_transactions_index_rows" class="<%= cycle('odd', 'even') %>">
+          <td class='transaction_name'><%= link_to transaction.commissionable.number, '' %></td>
+          <td class='align-center'><%= pretty_time(transaction.created_at) %></td>
+          <td class='align-center'><%= transaction.display_total %></td>
+          <td class='align-center'> <%= transaction.locked? %> </td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   <% else %>
