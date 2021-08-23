@@ -1,64 +1,74 @@
 <% if @user && @user.associated_partner.present? %>
-  <h3 class="text-left"><%= Spree.t(:my_commissions) %></h3>
-  <% @commissions = @user.associated_partner.commissions %>
-  <% if @commissions.any? %>
-    <table class="table" id="listing_affiliates" data-hook>
-      <thead>
-      <tr data-hook="admin_affiliates_index_headers">
-        <th><%= Spree.t(:start_date) %></th>
-        <th><%= Spree.t(:end_date) %></th>
-        <th><%= Spree.t(:total_commission) %></th>
-        <th><%= Spree.t(:transactions) %></th>
-        <th><%= Spree.t(:commission_status) %></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @commissions.each do |commission| %>
-        <tr id="<%= spree_dom_id commission %>" data-hook="commissions_index_rows" class="<%= cycle('odd', 'even') %>">
-          <td><%= pretty_time(commission.start_date) %></td>
-          <td><%= pretty_time(commission.end_date) %></td>
-          <td class='align-center'><%= commission.display_total %></td>
-          <td><%= commission.transactions_count.to_i %></td>
-          <td class='align-center'>
-            <% status = commission.paid? ? 'Paid' : 'unpaid' %>
-            <span class="label label-primary"><%= status %></span>
-          </td>
+  <h4 class="text-left"><%= Spree.t(:my_commissions) %></h4>
+  <div class="account-page-orders">
+    <% @commissions = @user.associated_partner.commissions %>
+    <% if @commissions.any? %>
+      <table id="listing_affiliates" data-hook>
+        <thead>
+        <tr data-hook="admin_affiliates_index_headers">
+          <th class="text-uppercase"><%= Spree.t(:start_date) %></th>
+          <th class="text-uppercase"><%= Spree.t(:end_date) %></th>
+          <th class="text-uppercase"><%= Spree.t(:total_commission) %></th>
+          <th class="text-uppercase"><%= Spree.t(:transactions) %></th>
+          <th class="text-uppercase"><%= Spree.t(:commission_status) %></th>
         </tr>
-      <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <div class="alert alert-info"><%= Spree.t(:no_commissions_yet) %></div>
-  <% end %>
+        </thead>
+        <tbody>
+        <% @commissions.each do |commission| %>
+          <tr id="<%= spree_dom_id commission %>" data-hook="commissions_index_rows" class="<%= cycle('odd', 'even') %>">
+            <td><%= l commission.start_date.to_date %></td>
+            <td><%= l commission.end_date.to_date %></td>
+            <td class='align-center'><%= commission.display_total %></td>
+            <td><%= commission.transactions_count.to_i %></td>
+            <td class='align-center'>
+              <% status = commission.paid? ? 'Paid' : 'Unpaid' %>
+              <span class="label label-primary"><%= status %></span>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="alert alert-info"><%= Spree.t(:no_commissions_yet) %></div>
+    <% end %>
 
-  <h3 class="text-left"><%= Spree.t(:affiliate_orders) %></h3>
-  <% @commission_transactions = @user.associated_partner.transactions %>
-  <% if @commission_transactions.any? %>
-    <table class="table" id="listing_affiliates" data-hook>
-      <thead>
-      <tr data-hook="admin_affiliates_index_headers">
-        <th><%= Spree.t(:reference) %></th>
-        <th>
-          <%= Spree.t(:date) %>
-        </th>
-        <th><%= Spree.t(:commission_amount) %></th>
-        <th><%= Spree.t(:locked) %></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @commission_transactions.each do |transaction| %>
-        <tr id="<%= spree_dom_id transaction %>" data-hook="admin_transactions_index_rows" class="<%= cycle('odd', 'even') %>">
-          <td class='transaction_name'><%= link_to transaction.commissionable.number, '' %></td>
-          <td class='align-center'><%= pretty_time(transaction.created_at) %></td>
-          <td class='align-center'><%= transaction.display_total %></td>
-          <td class='align-center'> <%= transaction.locked? %> </td>
+    <h4 class="text-left mt-5">
+      Affiliate events
+    </h4>
+    <% @commission_transactions = @user.associated_partner.transactions %>
+    <% if @commission_transactions.any? %>
+      <table id="listing_affiliates" data-hook>
+        <thead>
+        <tr data-hook="admin_affiliates_index_headers">
+          <th class="text-uppercase"><%= Spree.t(:reference) %></th>
+          <th class="text-uppercase">
+            <%= Spree.t(:date) %>
+          </th>
+          <th class="text-uppercase"><%= Spree.t(:commission_amount) %></th>
+          <!--        <th><%#= Spree.t(:locked) %></th>-->
         </tr>
-      <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <div class="alert alert-info"><%= Spree.t(:no_commission_transactions_yet) %></div>
-  <% end %>
-
-  <br/>
+        </thead>
+        <tbody>
+        <% @commission_transactions.each do |transaction| %>
+          <tr id="<%= spree_dom_id transaction %>" data-hook="admin_transactions_index_rows" class="<%= cycle('odd', 'even') %>">
+            <td class='transaction_name'>
+              <% if transaction.commissionable_type.eql? 'Spree::User' %>
+                User signup: <%= transaction.commissionable.email %>
+              <% elsif transaction.commissionable_type.eql? 'Spree::Order' %>
+                Order
+              <% elsif transaction.commissionable_type.eql? 'Spree::Vendor' %>
+                Producer signup: <%= Spree::Vendor.find_by(id: transaction.commissionable.id).try(:name) %></td>
+              <% end %>
+              </td>
+              <td class='align-center'><%= l transaction.created_at.to_date %></td>
+              <td class='align-center'><%= transaction.display_total %></td>
+              <!--            <td class='align-center'> <%#= transaction.locked? %> </td>-->
+              </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="alert alert-info"><%= Spree.t(:no_commission_transactions_yet) %></div>
+    <% end %>
+  </div>
 <% end %>

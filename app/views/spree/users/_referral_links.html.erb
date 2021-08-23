@@ -4,8 +4,10 @@
   <dd>
     <form class="form-inline">
       <div class="form-group">
-        <input type='text' data-coupon-code=true value='<%= referral_url(@user.referral.code) %>' class='form-control referral-url-field' />
-        <button class="btn btn-primary btn-copylink" data-copy-coupon-code=true type="button" title='Copy referral link'><span class='glyphicon glyphicon-copy'></span></button>
+        <input type='text' data-coupon-code=true value='<%= referral_url(@user.referral.code) %>' class='form-control referral-url-field'/>
+        <button class="btn btn-primary btn-copylink" data-copy-coupon-code=true type="button" title='Copy referral link'>
+          <span class='glyphicon glyphicon-copy'></span>
+        </button>
       </div>
     </form>
     <%= link_to "More information on our Refer a Friend Program", friends_path %>
@@ -18,19 +20,21 @@
   <br>
   <div>
     <dt>Referrals</dt>
-    <dd><%= @user.referred_count%></dd>
+    <dd><%= @user.referred_count %></dd>
     <dd><%= link_to Spree.t(:details, scope: :referral), account_referral_details_path %>
   </div>
   <br>
 <% end %>
-<% if @user.associated_partner.present? %>
+<% if @user.associated_partner.present? && @user.affiliate? %>
   <br>
-  <dt>Affilate URL</dt>
+  <dt>Affiliate URL</dt>
   <dd class='col-md-6 row'>
     <form class="form-inline">
       <div class="form-group">
-        <input type='text' data-coupon-code=true value='<%= affiliate_url(@user.associated_partner.path) %>' class='form-control referral-url-field' />
-        <button class="btn btn-primary btn-copylink" data-copy-coupon-code=true type="button" title='Copy affiliate link'><span class='glyphicon glyphicon-copy'></span></button>
+        <input type='text' data-coupon-code=true value='<%= affiliate_url(@user.associated_partner.path) %>' class='form-control referral-url-field'/>
+        <button class="btn btn-primary btn-copylink" data-copy-coupon-code=true type="button" title='Copy affiliate link'>
+          <span class='glyphicon glyphicon-copy'></span>
+        </button>
       </div>
     </form>
   </dd>

@@ -3,20 +3,20 @@
 <% if @referred_records.any? %>
   <table class="table">
     <thead>
-      <tr>
-        <th><%= Spree.t(:user) %></th>
-        <th><%= Spree.t(:credits_received) %></th>
-        <th><%= Spree.t(:date) %></th>
-      </tr>
+    <tr>
+      <th><%= Spree.t(:user) %></th>
+      <th><%= Spree.t(:credits_received) %></th>
+      <th><%= Spree.t(:date) %></th>
+    </tr>
     </thead>
     <tbody>
-      <% @referred_records.each do |referred_record| %>
-        <tr id="<%= spree_dom_id referred_record %>">
-          <td><%= referred_record.order.email %></td>
-          <td><%= referred_record.store_credit ? referred_record.store_credit.display_amount : '0'  %></td>
-          <td><%= referred_record.created_at.strftime("%m-%d-%y") %></td>
-        </tr>
-      <% end %>
+    <% @referred_records.each do |referred_record| %>
+      <tr id="<%= spree_dom_id referred_record %>">
+        <td><%= referred_record.order.email %></td>
+        <td><%= referred_record.store_credit ? referred_record.store_credit.display_amount : '0' %></td>
+        <td><%= referred_record.created_at.strftime("%m-%d-%y") %></td>
+      </tr>
+    <% end %>
     </tbody>
   </table>
 <% else %>
