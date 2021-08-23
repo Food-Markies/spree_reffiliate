@@ -46,6 +46,8 @@
             <td class='transaction_name'><%=link_to transaction.commissionable.email, admin_user_path(Spree::User.find_by(email: transaction.commissionable.email).try(:id)) %></td>
           <% elsif transaction.commissionable_type.eql? 'Spree::Order' %>
             <td class='transaction_name'><%=link_to transaction.commissionable.number, edit_admin_order_path(Spree::Order.find_by(number: transaction.commissionable.number).try(:id)) %></td>
+          <% elsif transaction.commissionable_type.eql? 'Spree::Vendor' %>
+            <td class='transaction_name'><%=link_to transaction.commissionable.name, edit_admin_vendor_path(Spree::Vendor.find_by(id: transaction.commissionable.id).try(:id)) %></td>
           <% end %>
           <td class='transaction_name'><%= transaction.commissionable_type %></td>
           <td class='align-center'><%= pretty_time(transaction.created_at) %></td>

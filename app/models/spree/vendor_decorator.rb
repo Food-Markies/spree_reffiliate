@@ -4,6 +4,8 @@ module Spree
 
     def self.prepended(base)
       base.has_one :affiliate_record, class_name: 'Spree::ReferredRecord'
+      base.has_many :transactions, as: :commissionable, class_name: 'Spree::CommissionTransaction', dependent: :restrict_with_error
+
       base.after_create :process_affiliate
     end
 

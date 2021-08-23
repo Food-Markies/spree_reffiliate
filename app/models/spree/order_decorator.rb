@@ -1,26 +1,37 @@
 module Spree
   module OrderDecorator
-  include Spree::TransactionRegistrable
+    include Spree::TransactionRegistrable
 
-  def self.prepended(base)
-    base.has_many :transactions, as: :commissionable, class_name: 'Spree::CommissionTransaction', dependent: :restrict_with_error
-    base.belongs_to :affiliate, class_name: 'Spree::Affiliate'
-    base.belongs_to :referral, class_name: 'Spree::Referral'
-    base.state_machine.after_transition to: :complete, do: :create_commission_transaction
-    base.state_machine.before_transition to: :complete, do: :create_referral_benefit
-  end
+    def self.prepended(base)
+      base.has_many :transactions, as: :commissionable, class_name: 'Spree::CommissionTransaction', dependent: :restrict_with_error
+      base.belongs_to :affiliate, class_name: 'Spree::Affiliate'
+      base.belongs_to :referral, class_name: 'Spree::Referral'
+      base.state_machine.after_transition to: :complete, do: :create_commission_transaction
+      base.state_machine.before_transition to: :complete, do: :create_referral_benefit
+    end
 
-  def referred?
-    referral.present?
-  end
+    def referred?
+      referral.present?
+    end
 
-  def affiliated?
-    affiliate.present?
-  end
+    def affiliated?
+      affiliate.present?
+    end
 
-  private
+    private
+
     def create_commission_transaction
-      register_commission_transaction(affiliate) if affiliate.present?
+      if affiliate.present?
+        register_commission_transaction(affiliate)
+      else
+        line_items_by_vendor = line_items.group_by { |l| l.vendor.id }
+
+        line_items_by_vendor.keys.each do |v_id|
+          vendor = Spree::Vendor.find_by(id: v_id)
+          a = Spree::Affiliate.find_by(path: vendor.affiliate_code)
+          register_commission_transaction(a, line_items_by_vendor[v_id].sum { |i| i.amount }, vendor)
+        end
+      end
     end
 
     def create_referral_benefit

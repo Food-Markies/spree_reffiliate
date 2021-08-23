@@ -14,6 +14,8 @@ module Spree
     scope :active, -> { where(active: true) }
     scope :user_registration, -> { includes(:commission_rule).where(spree_commission_rules: { name: Spree::CommissionRule::USER_REGISTRATION }) }
     scope :order_placement, ->   { includes(:commission_rule).where(spree_commission_rules: { name: Spree::CommissionRule::ORDER_PLACEMENT }) }
+    scope :vendor_signup, ->   { includes(:commission_rule).where(spree_commission_rules: { name: Spree::CommissionRule::VENDOR_SIGNUP }) }
+    scope :vendor_order_placement, ->   { includes(:commission_rule).where(spree_commission_rules: { name: Spree::CommissionRule::VENDOR_ORDER_PLACEMENT }) }
 
     private
       def assign_type_of_commission
