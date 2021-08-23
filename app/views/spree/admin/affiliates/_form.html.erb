@@ -9,13 +9,13 @@
         <% end %>
       </div>
 
-<!--      <div data-hook="affiliate_contact">-->
-        <%#= f.field_container :contact, class: ['form-group'] do %>
-          <%#= f.label :contact, Spree.t(:contact) %>
-          <%#= f.text_field :contact, class: 'form-control' %>
-          <%#= f.error_message_on :contact %>
-        <%# end %>
-<!--      </div>-->
+      <!--      <div data-hook="affiliate_contact">-->
+      <%#= f.field_container :contact, class: ['form-group'] do %>
+      <%#= f.label :contact, Spree.t(:contact) %>
+      <%#= f.text_field :contact, class: 'form-control' %>
+      <%#= f.error_message_on :contact %>
+      <%# end %>
+      <!--      </div>-->
 
       <div data-hook="affiliate_email">
         <%= f.field_container :email, class: ['form-group'] do %>
@@ -25,29 +25,29 @@
         <% end %>
       </div>
 
-<!--      <div data-hook="affiliate_website">-->
-        <%#= f.field_container :website, class: ['form-group'] do %>
-          <%#= f.label :website, Spree.t(:website) %>
-          <%#= f.text_field :website, class: 'form-control' %>
-          <%#= f.error_message_on :website %>
-        <%# end %>
-<!--      </div>-->
+      <!--      <div data-hook="affiliate_website">-->
+      <%#= f.field_container :website, class: ['form-group'] do %>
+      <%#= f.label :website, Spree.t(:website) %>
+      <%#= f.text_field :website, class: 'form-control' %>
+      <%#= f.error_message_on :website %>
+      <%# end %>
+      <!--      </div>-->
 
-<!--      <div data-hook="affiliate_paypal_email">-->
-        <%#= f.field_container :paypal_email, class: ['form-group'] do %>
-          <%#= f.label :paypal_email, Spree.t(:paypal_email) %>
-          <%#= f.text_field :paypal_email, :class => 'form-control' %>
-          <%#= f.error_message_on :paypal_email %>
-        <%# end %>
-<!--      </div>-->
+      <!--      <div data-hook="affiliate_paypal_email">-->
+      <%#= f.field_container :paypal_email, class: ['form-group'] do %>
+      <%#= f.label :paypal_email, Spree.t(:paypal_email) %>
+      <%#= f.text_field :paypal_email, :class => 'form-control' %>
+      <%#= f.error_message_on :paypal_email %>
+      <%# end %>
+      <!--      </div>-->
 
-<!--      <div data-hook="affiliate_preferred_currency">-->
-        <%#= f.field_container :preferred_currency, class: ['form-group'] do %>
-          <%#= f.label :preferred_currency, Spree.t(:preferred_currency) %>
-          <%#= f.select :preferred_currency, options_for_select(supported_currencies, @affiliate.preferred_currency), {include_blank: true}, :class => 'form-control' %>
-          <%#= f.error_message_on :preferred_currency %>
-        <%# end %>
-<!--      </div>-->
+      <!--      <div data-hook="affiliate_preferred_currency">-->
+      <%#= f.field_container :preferred_currency, class: ['form-group'] do %>
+      <%#= f.label :preferred_currency, Spree.t(:preferred_currency) %>
+      <%#= f.select :preferred_currency, options_for_select(supported_currencies, @affiliate.preferred_currency), {include_blank: true}, :class => 'form-control' %>
+      <%#= f.error_message_on :preferred_currency %>
+      <%# end %>
+      <!--      </div>-->
 
       <div data-hook="affiliate_partial">
         <%= f.field_container :partial, class: ['form-group'] do %>
@@ -83,38 +83,52 @@
 <div class="row">
   <div class="col-md-12">
     <fieldset data-hook="admin_affiliate_edit_general_settings" class="alpha twelve columns">
-    <legend><%= Spree.t(:commission_info) %></legend>
-      <%= f.fields_for :affiliate_commission_rules  do |aff_comm_rule| %>
-        <% rule = aff_comm_rule.object.commission_rule %>
-        <div class="col-md-6">
-          <div data-hook="affiliate_commission">
-            <%= aff_comm_rule.label :rate, "#{ rule.name } (#{rule.fixed_commission? ? 'fixed commission' : '% commission'})" %>
-            <%= aff_comm_rule.text_field :rate, class: 'form-control' %>
-            <%= aff_comm_rule.hidden_field :commission_rule_id %>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <%= aff_comm_rule.label :active, :active %>
-          <%= aff_comm_rule.check_box :active, class: 'form-control' %>
-        </div>
-      <% end %>
+      <legend><%= Spree.t(:commission_info) %></legend>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>
+            Active
+          </th>
+          <th>
+            Rate
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <%= f.fields_for :affiliate_commission_rules do |aff_comm_rule| %>
+          <% rule = aff_comm_rule.object.commission_rule %>
+          <tr>
+            <td>
+              <%= aff_comm_rule.check_box :active %>
+            </td>
+            <td>
+              <%= aff_comm_rule.label :rate, "#{ rule.name } (#{rule.fixed_commission? ? 'fixed commission' : '% commission'})" %>
+              <%= aff_comm_rule.text_field :rate, class: 'form-control' %>
+            </td>
+          </tr>
+          <%= aff_comm_rule.hidden_field :commission_rule_id %>
+        <% end %>
+        </tbody>
+      </table>
     </fieldset>
   </div>
 </div>
+
 <script>
-  var fake_layout = $("#fake_layout"),
-      affiliate_layout = $("#affiliate_layout");
-  fake_layout.on("change", function(){
-    affiliate_layout.hide();
-    if ($(this).val() != '') {
-      affiliate_layout.val($(this).val());
+    const fake_layout = $("#fake_layout"),
+        affiliate_layout = $("#affiliate_layout");
+    fake_layout.on("change", function () {
+        affiliate_layout.hide();
+        if ($(this).val() != '') {
+            affiliate_layout.val($(this).val());
+        } else {
+            affiliate_layout.val('layouts/application').show().focus();
+        }
+    });
+    if (!fake_layout.hasClass('other')) {
+        affiliate_layout.hide();
     } else {
-      affiliate_layout.val('layouts/application').show().focus();
+        fake_layout.val('');
     }
-  });
-  if (!fake_layout.hasClass('other')) {
-    affiliate_layout.hide();
-  } else {
-    fake_layout.val('');
-  }
 </script>

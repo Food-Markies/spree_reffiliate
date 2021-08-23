@@ -41,6 +41,11 @@ module Spree
       Spree::Order.where(id: order_ids)
     end
 
+    def referred_vendors
+      vendor_ids = transactions.where(commissionable_type: 'Spree::Vendor').pluck(:commissionable_id)
+      Spree::Vendor.where(id: vendor_ids)
+    end
+
     def referred_count
       referred_records.count
     end
@@ -51,6 +56,10 @@ module Spree
 
     def referred_orders_count
       transactions.where(commissionable_type: 'Spree::Order').count
+    end
+
+    def referred_vendors_count
+      transactions.where(commissionable_type: 'Spree::Vendor').count
     end
 
     private
