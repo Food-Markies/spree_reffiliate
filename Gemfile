@@ -5,4 +5,6 @@ gem 'spree', github: 'spree/spree', branch: 'master'
 gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: 'master'
 
 gem "codeclimate-test-reporter", group: :test, require: nil
+
+gem 'spree_multi_vendor'
 gemspec

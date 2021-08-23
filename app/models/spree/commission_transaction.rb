@@ -32,7 +32,7 @@ module Spree
       end
 
       def assign_currency
-        self.currency = Spree::TransactionService.new(self).determine_currency
+        # self.currency = Spree::TransactionService.new(self).determine_currency
         return true
       end
 

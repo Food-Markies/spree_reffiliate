@@ -31,7 +31,7 @@ module Spree
         @affiliate ||= Spree::Affiliate.find_by(activation_token: params[:activation_token])
         (redirect_to root_path, error: Spree.t(:affiliate_not_found) and return) unless @affiliate
         @affiliate_user ||= Spree::User.find_by(email: @affiliate.email)
-        @affiliate_user.can_activate_associated_partner = true
+        # @affiliate_user.can_activate_associated_partner = true
       end
     end
 

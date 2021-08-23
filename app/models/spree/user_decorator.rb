@@ -1,7 +1,6 @@
 module Spree
   module UserDecorator
     include Spree::TransactionRegistrable
-    attr_accessor :referral_code, :affiliate_code, :can_activate_associated_partner
 
     def self.prepended(base)
       base.has_one :referral
@@ -15,7 +14,7 @@ module Spree
       # Add referral benefit based on order instead of user signup to ensure referrer receives benefit if user checks out as guest
       # after_create :process_referral
       base.after_create :process_affiliate
-      base.after_update :activate_associated_partner, if: :associated_partner_activable?
+      # base.after_update :activate_associated_partner, if: :associated_partner_activable?
 
       base.validates :referral_credits, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
     end
@@ -106,11 +105,6 @@ module Spree
         affiliated = Spree::Affiliate.where('lower(path) = ?', affiliate_code.downcase).first
         if affiliated
           register_commission_transaction(affiliated)
-          # referred_record = Spree::ReferredRecord.new(
-          #   user: self,
-          #   affiliate: affiliated
-          # )
-          # referred_record.save!
           affiliated.referred_records.create(user: self)
         end
       end
@@ -120,9 +114,9 @@ module Spree
       associated_partner.update_attributes(activation_token: nil, activated_at: Time.current, active: true)
     end
 
-    def associated_partner_activable?
-      can_activate_associated_partner && associated_partner? && !associated_partner.active?
-    end
+    # def associated_partner_activable?
+    #   can_activate_associated_partner && associated_partner? && !associated_partner.active?
+    # end
 
     def create_store_credits(referrer)
       referrer.store_credits.create(amount: referral_amount(referrer),
