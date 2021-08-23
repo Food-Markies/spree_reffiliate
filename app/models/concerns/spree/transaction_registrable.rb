@@ -26,7 +26,10 @@ module Spree::TransactionRegistrable
         if self.class.eql? Spree::User
           commission_rule_id = Spree::CommissionRule.user_registration.try(:id)
         elsif self.class.eql? Spree::Order
-          commission_rule_id = Spree::CommissionRule.order_placement.try(:id)
+          commission_rule_id = Spree::CommissionRule.vendor_order_placement.try(:id)
+          unless commission_rule_id
+            commission_rule_id = Spree::CommissionRule.order_placement.try(:id)
+          end
         elsif self.class.eql? Spree::Vendor
           commission_rule_id = Spree::CommissionRule.vendor_signup.try(:id)
         end
